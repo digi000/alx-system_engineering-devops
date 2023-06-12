@@ -1,2 +1,8 @@
 #!/bin/bash
+<<<<<<< HEAD
+
 cd ~
+pwd
+=======
+cd ~
+>>>>>>> a99e013e0084205cb983ef3daaa4c58960fc2326
