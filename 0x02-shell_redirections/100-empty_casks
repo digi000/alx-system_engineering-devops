@@ -1,1 +1,2 @@
-find . -type f -empty -printf "%f\n" -o -type d -empty -printf "%f\n"
+#!/bin/bash
+echo 'find . -type f -empty -printf "%f\n" -o -type d -empty -printf "%f\n"'>100-empty_casks
