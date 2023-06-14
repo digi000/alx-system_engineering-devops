@@ -1,0 +1,57 @@
+#!/bin/bash
+# Define the bases as arrays
+water=(w a t e r)
+stir=(t i . r)
+bestchol=(b e s t c h o l)
+
+# Convert WATER from base water to base 10
+water10=0
+for ((i=0; i<${#WATER}; i++)); do
+  # Find the index of each digit in the water array
+  for ((j=0; j<${#water[@]}; j++)); do
+    if [ "${WATER:$i:1}" == "${water[$j]}" ]; then
+      index=$j
+      break
+    fi
+  done
+  # Multiply the index by the base raised to the power of the position
+  water10=$((water10 + index * 5 ** (${#WATER}-i-1)))
+done
+
+# Convert STIR from base stir to base 10
+stir10=0
+for ((i=0; i<${#STIR}; i++)); do
+  # Find the index of each digit in the stir array
+  for ((j=0; j<${#stir[@]}; j++)); do
+    if [ "${STIR:$i:1}" == "${stir[$j]}" ]; then
+      index=$j
+      break
+    fi
+  done
+  # Multiply the index by the base raised to the power of the position, accounting for the decimal point
+  if [ "${STIR:$i:1}" == "." ]; then
+    point=$i
+  else
+    if [ -z "$point" ]; then
+      stir10=$((stir10 + index * 4 ** (${#STIR}-i-1)))
+    else
+      stir10=$((stir10 + index * 4 ** (point-i-1)))
+    fi
+  fi
+done
+
+# Add the two numbers in base 10
+sum10=$((water10 + stir10))
+
+# Convert the sum from base 10 to base bestchol
+sumbestchol=""
+while [ $sum10 -gt 0 ]; do
+  # Find the remainder of the sum divided by the base and append the corresponding digit to the result
+  rem=$((sum10 % 7))
+  sumbestchol="${bestchol[$rem]}$sumbestchol"
+  # Divide the sum by the base and repeat until zero
+  sum10=$((sum10 / 7))
+done
+
+# Print the result in base bestchol
+echo "$sumbestchol"
