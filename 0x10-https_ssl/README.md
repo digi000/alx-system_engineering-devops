@@ -1,86 +1,69 @@
-# 0x10. HTTPS SSL
+# HTTPS SSL
 
-## Overview
-The goal of this project was to learn more about HTTPS SSL and its roles, what the purpose of encrypting traffic is, and what SSL termination means
+![](https://www.x-cart.com/img/8527/http_to_https-1.webp)
+
+> SSL stands for Secure Sockets Layer and, in short, it's the standard technology for keeping an internet connection secure and safeguarding any sensitive data that is being sent between two systems, preventing criminals from reading and modifying any information transferred, including potential personal details. The two systems can be a server and a client (for example, a shopping website and browser) or server to server (for example, an application with personal identifiable information or with payroll information).
+
+> HTTPS (Hyper Text Transfer Protocol Secure) appears in the URL when a website is secured by an SSL certificate. The details of the certificate, including the issuing authority and the corporate name of the website owner, can be viewed by clicking on the lock symbol on the browser bar.
+
+__What happens when you don’t secure your website traffic?__
+<img src='https://s3.amazonaws.com/intranet-projects-files/holbertonschool-sysadmin_devops/276/xCmOCgw.gif'>
+
+## Prerequisites
+- What is `HTTPS`?
+- What are the __2 main elements that SSL is providing__
+- `HAProxy` __SSL termination on__ `Ubuntu16.04`
+- __SSL termination__
+- __Bash function__
+
+## Tasks :heavy_check_mark:
+
+- [0-world_wide_web](./0-world_wide_web)
+- [1-haproxy_ssl_termination](./1-haproxy_ssl_termination)
+- [100-redirect_http_to_https](./100-redirect_http_to_https)
 
 ## Requirements
-### Shell Scripts
-* Allowed editors: `vi`, `vim`, `emacs`, 
-* All your scripts will be tested on Ubuntu 14.04 LTS
-* All your files should end with a new line
-* The first line of all your files should be exactly `#!/usr/bin/env bash`
-* All your files must be executable
 
-## Tasks
-### Mandatory
-**[0-https_abc](0-https_abc)** - Answers to the following questions:
+- Allowed editors: `vi`, `vim`, `emacs`
+- All your files will be interpreted on `Ubuntu 16.04 LTS`
+- All your files should end with a new line
+- A README.md file, at the root of the folder of the project, is mandatory
+- All your Bash script files must be executable
+- Your Bash script must pass `Shellcheck (version 0.3.7)` without any error
+- The first line of all your Bash scripts should be exactly `#!/usr/bin/env bash`
+- The second line of all your Bash scripts should be a comment explaining what is the script doing
+
+## Installing SSL Termination on Haproxy
+- Linux Distro: __Ubuntu 20.04 LTS__
+- HAProxy Version: __v2.4.3__
+
+```bash
+
+#if you already have haproxy installed do this
+$ sudo snap install --classic certbot
+
+# check if haproxy is installed, if yes stop haproxy
+$ sudo service haproxy stop
+
+# Install ssl using certbot
+$ sudo certbot certonly --standalone
+
+# Follow the instrustions accurately, at the end please take note of the
+# Location of your SSL Keys. Usually going to default to the /etc/letsencrypt
+# directory. To view them do the below
+$ ls /etc/letsencrypt/live/domain_name/
+
+# Now concat your certificate .pem files to a single pem file and save them to
+# /etc/ssl/private
+$ cat cert_key_1 cert_key_2 > /etc/ssl/private/any_desired_name.pem
+
+# Now go to your haproxy config file to add a the path to your certificate
+# Then reload haproxy
+$ sudo service haproxy reload
 ```
-What is HTTPS?
+_If you don't have HAProxy installed just copy and run this on your terminal and save yourself the hassle_
 
-1. A secure version of HTTP
-2. A faster version of HTTP
-3. A superior version of HTTP
-
-Why do you need HTTPS?
-
-1. To encrypt credit card and social security number information going between the client and the website servers
-2. To encrypt all communication between the client and the website servers
-3. To accelerate the communication between the client and the website servers
-
-You want to setup HTTPS on your website, where shall you place the certificate?
-
-1. In a secure location where nobody can access it
-2. You can host it anywhere but you have to share the link to it on your website
-3. On your website web server(s)
 ```
+$ wget -O haproxy https://github.com/sammykingx/alx-system_engineering-devops/raw/master/0x0F-load_balancer/install_haproxy_safely && bash haproxy
 
-**[1-world_wide_web](1-world_wide_web)** - script takes a `domain` as a mandatory argument and a `subdomain` as an optional argument and displays the subdomain, DNS record type, and the IP that it points to. If no subdomain is provided, it shows information for `www`, `lb-01`, `web-01`, and `web-02`.
 ```
-$ ./1-world_wide_web abinet.tech
-The subdomain www is a A record and points to 35.231.228.196
-The subdomain lb-01 is a A record and points to 35.231.228.196
-The subdomain web-01 is a A record and points to 35.237.197.183
-The subdomain web-02 is a A record and points to 35.237.134.117
-
-$ ./1-world_wide_web abinet.tech web-01
-The subdomain web-01 is a A record and points to 35.237.197.183
-```
-
-**[2-haproxy_ssl_termination](2-haproxy_ssl_termination)** - Haproxy configuration file (`/etc/haproxy/haproxy.cfg`) that configures Haproxy to accept encrypted traffic on the subdomain `www.` where Haproxy must be listening on port TCP 443, Haproxy must be accepting SSL traffic, Haproxy must serve encrypted traffic that will return the root of the web server, and a query to the root of the domain should return a page containing `DHK School`.
-```
-$ curl -sI https://www.abinet.tech
-HTTP/1.1 200 OK
-Server: nginx/1.4.6 (Ubuntu)
-Date: Thu, 02 Aug 2018 05:12:55 GMT
-Content-Type: text/html
-Content-Length: 30
-Last-Modified: Thu, 02 Aug 2018 04:06:38 GMT
-ETag: "5b62834e-1e"
-X-Served-By: 300-web-02
-Accept-Ranges: bytes
-
-$ curl -s https://www.abinet.tech
-DHK School for the win!
-```
-
-### Advanced
-**[100-redirect_http_to_https](100-redirect_http_to_https)** - Haproxy configuration file that configures Haproxy to automatically redirect http traffic to https. Haproxy should return a 301
-```
-$ curl -sIL http://www.dhk.online
-HTTP/1.1 301 Moved Permanently
-Content-length: 0
-Location: https://www.dhk.online/
-Connection: close
-
-HTTP/1.1 200 OK
-Server: nginx/1.4.6 (Ubuntu)
-Date: Tue, 28 Feb 2017 02:19:18 GMT
-Content-Type: text/html
-Content-Length: 30
-Last-Modified: Tue, 21 Feb 2017 07:21:32 GMT
-ETag: "58abea7c-1e"
-X-Served-By: 03-web-01
-Accept-Ranges: bytes
-```
-
-2018 - All programs written by Derek Kwok ([@dlangshk](https://twitter.com/dlangshk)) at [DHK School](https://www.dhkschool.com/)
