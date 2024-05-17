@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 #Install nginx web server
 apt-get -y install nginx
-new_ipv4="34.198.248.145"
-nginx_conf="/etc/nginx/sites-available/default"
-sed -i "s/listen 0.0.0.0:80;/listen $new_ipv4:80;/g" $nginx_conf
+service nginx start
+ufw allow 'Nginx HTTP'
+# Give the user ownership to website files for easy editing
+chown -R "$USER":"$USER" /var/www/html
+chmod -R 755 /var/www
 bash -c 'echo "Hello World!" > /var/www/html/index.html'
 service nginx restart
