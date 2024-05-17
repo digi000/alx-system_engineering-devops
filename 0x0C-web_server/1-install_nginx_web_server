@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 #Install nginx web server
 apt-get -y install nginx
-ufw allow 'Nginx HTTP'
+new_ipv4="34.198.248.145"
+nginx_conf="/etc/nginx/sites-available/default"
+sed -i "s/listen 0.0.0.0:80;/listen $new_ipv4:80;/g" $nginx_conf
 bash -c 'echo "Hello World!" > /var/www/html/index.html'
 service nginx restart
