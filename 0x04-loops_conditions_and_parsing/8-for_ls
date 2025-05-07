@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#for
+for i in $(ls)
+do
+	echo "${i#*-}"
+done
