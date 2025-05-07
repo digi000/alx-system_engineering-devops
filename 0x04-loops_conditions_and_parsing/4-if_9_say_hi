@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#if on 9
+i=0
+while [ $i -lt 10 ]
+do
+	if [ $i -gt 8 ]
+	then
+		echo "Hi"
+	fi
+	echo "Best School"
+	let "i+=1"
+done
