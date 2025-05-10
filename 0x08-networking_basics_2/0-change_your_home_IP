@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#cn
+sudo echo 127.0.0.2	localhost >> /etc/hosts
+sudo echo 8.8.8.8	facebook.com >> /etc/hosts
