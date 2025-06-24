@@ -13,6 +13,6 @@ if __name__ == "__main__":
     todo = requests.get(f'https://jsonplaceholder.typicode.com/todos?userId={urId}')
     todoDt = todo.json()
     with open(f"{urId}.csv", 'w') as csvfile:
-        writer = csv.writer(csvfile)
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         for task in todoDt:
             writer.writerow(["{}".format(urId), f"{userName}", f"{task['completed']}", f'{task["title"]}'])
